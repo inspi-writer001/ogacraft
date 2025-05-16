@@ -12,7 +12,7 @@ type Filters<T> = {
   };
 };
 
-export function filterAndSearchWithRanges<T extends Record<string, any>>(
+export function filterAndSearchWithRanges<T extends Record<string, unknown>>(
   data: T[],
   searchTerm: string,
   searchKeys: (keyof T)[],
@@ -42,10 +42,11 @@ export function filterAndSearchWithRanges<T extends Record<string, any>>(
       !filters?.ranges ||
       Object.entries(filters.ranges).every(([key, range]) => {
         const itemValue = item[key];
-        if (typeof itemValue !== 'number') return false;
+        if (typeof itemValue !== "number") return false;
 
         return (
-          (range && (range.lt === undefined || itemValue < range.lt)) &&
+          range &&
+          (range.lt === undefined || itemValue < range.lt) &&
           (range.lte === undefined || itemValue <= range.lte) &&
           (range.gt === undefined || itemValue > range.gt) &&
           (range.gte === undefined || itemValue >= range.gte)

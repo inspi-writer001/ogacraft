@@ -18,7 +18,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SeperatorWithText } from "@/components/ui/seperator-with-text";
@@ -27,7 +27,7 @@ import Link from "next/link";
 import {
   useLoginWithEmail,
   useLoginWithOAuth,
-  usePrivy,
+  usePrivy
 } from "@privy-io/react-auth";
 import { toast } from "sonner";
 import { setCustomMetaData } from "@/action/set-custom-metadata";
@@ -42,7 +42,7 @@ export type OtpFlowState =
   | { status: "done" };
 
 const formSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email()
 });
 
 export const AuthForm = ({ userType }: AuthFormProps) => {
@@ -50,14 +50,14 @@ export const AuthForm = ({ userType }: AuthFormProps) => {
   const { sendCode, state } = useLoginWithEmail({
     onError: () => {
       toast.error("Failed to send verification code");
-    },
+    }
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-    },
+      email: ""
+    }
   });
 
   const otpState = state as OtpFlowState;
@@ -72,12 +72,12 @@ export const AuthForm = ({ userType }: AuthFormProps) => {
           : "/auth/sign-up/client/verify" + `?email=${form.getValues("email")}`
       );
     }
-  }, [otpState.status, router, userType]);
+  }, [otpState.status, router, userType, form]);
 
   const {
     loading,
     initOAuth,
-    state: oauthState,
+    state: oauthState
   } = useLoginWithOAuth({
     onComplete: async ({ user, isNewUser }) => {
       const authToken = await getAccessToken();
@@ -85,7 +85,7 @@ export const AuthForm = ({ userType }: AuthFormProps) => {
         await setCustomMetaData({
           user_type: userType ?? "artisan",
           user_id: user.id,
-          accessToken: authToken ?? "",
+          accessToken: authToken ?? ""
         });
 
         router.push(`/auth/sign-up/${userType}/profile`);
@@ -95,7 +95,7 @@ export const AuthForm = ({ userType }: AuthFormProps) => {
       // if (oauthState.status === "done") {
       //   router.push(`/auth/sign-up/${userType === "artisan" ? "artisan" : "client"}/profile`);
       // }
-    },
+    }
   });
 
   // Handle OAuth state changes

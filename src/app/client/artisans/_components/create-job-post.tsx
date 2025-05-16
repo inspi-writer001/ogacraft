@@ -1,59 +1,59 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+  DialogTrigger
+} from "@/components/ui/dialog";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+  FormMessage
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { DayPicker } from 'react-day-picker';
-
+  SelectValue
+} from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+// import { DayPicker } from 'react-day-picker';
 
 const formSchema = z.object({
   title: z
     .string()
-    .min(4, { message: 'Title must be at least 4 characters long' }),
-  budget: z.string().min(1, { message: 'Enter budget' }),
-  currency: z.string().min(1, { message: 'Select a currency' }),
-  deadline: z.string().min(1, { message: 'Select a deadline' }),
+    .min(4, { message: "Title must be at least 4 characters long" }),
+  budget: z.string().min(1, { message: "Enter budget" }),
+  currency: z.string().min(1, { message: "Select a currency" }),
+  deadline: z.string().min(1, { message: "Select a deadline" })
 });
 
 const CreateJobPost = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: '',
-      budget: '',
-      currency: 'usd',
-      deadline: '',
-    },
+      title: "",
+      budget: "",
+      currency: "usd",
+      deadline: ""
+    }
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       console.log(values);
-    } catch (error: any) {
+    } catch (error) {
       form.reset();
+      console.log(error);
     }
   }
 

@@ -10,13 +10,13 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
-  InputOTPSlot,
+  InputOTPSlot
 } from "@/components/ui/input-otp";
 
 import { AuthFormWrapper } from "@/app/auth/_components/auth-form-wrapper";
@@ -30,8 +30,8 @@ import { OtpFlowState } from "@/app/auth/_components/auth-form";
 
 const FormSchema = z.object({
   pin: z.string().min(6, {
-    message: "Your one-time password must be 6 characters.",
-  }),
+    message: "Your one-time password must be 6 characters."
+  })
 });
 
 export const VerifyForm = () => {
@@ -40,9 +40,9 @@ export const VerifyForm = () => {
 
   const { ready, authenticated } = usePrivy();
 
-  const email = searchParams.get("email");
+  const email = !!searchParams.get("email");
 
-  const { data, refetch } = useGetUserByEmail(email ?? "");
+  const { data, refetch } = useGetUserByEmail(email ?? undefined);
 
   const { loginWithCode, state } = useLoginWithEmail({
     onComplete: async ({ isNewUser }) => {
@@ -56,7 +56,7 @@ export const VerifyForm = () => {
         //   router.push(`/${data.account_type ?? ""}`);
         // }
       }
-    },
+    }
   });
 
   const otpState = state as OtpFlowState;
@@ -64,20 +64,20 @@ export const VerifyForm = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      pin: "",
-    },
+      pin: ""
+    }
   });
 
   useEffect(() => {
-    if(ready && authenticated && data) {
+    if (ready && authenticated && data) {
       router.push(`/${data.account_type ?? ""}`);
     }
-  }, [authenticated, data, ready, router])
+  }, [authenticated, data, ready, router]);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       await loginWithCode({
-        code: data.pin,
+        code: data.pin
       });
     } catch {
       toast.error("Something went wrong");

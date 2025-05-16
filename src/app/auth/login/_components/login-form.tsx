@@ -13,7 +13,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SeperatorWithText } from "@/components/ui/seperator-with-text";
@@ -31,7 +31,7 @@ type OtpFlowState =
   | { status: "done" };
 
 const formSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email()
 });
 
 export const LoginForm = () => {
@@ -44,7 +44,7 @@ export const LoginForm = () => {
     // },
     onError: () => {
       toast.error("Failed to send verification code");
-    },
+    }
   });
 
   const otpState = state as OtpFlowState;
@@ -64,29 +64,30 @@ export const LoginForm = () => {
         return toast.error("User not found");
       }
       return router.push(`/user?.customMetadata?.user_type ?? ""`);
-    },
+    }
   });
 
   // Handle OAuth state changes
-    React.useEffect(() => {
-      if (otpState.status === "awaiting-code-input") {
-        router.push(`/auth/login/verify?email=${form.getValues("email")}`);
-      }
-    }, [otpState.status, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-    },
+      email: ""
+    }
   });
+
+  React.useEffect(() => {
+    if (otpState.status === "awaiting-code-input") {
+      router.push(`/auth/login/verify?email=${form.getValues("email")}`);
+    }
+  }, [otpState.status, router, form]);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       sendCode({ email: values.email, disableSignup: true }).then(() => {
-        router.push("/auth/login/verify" + `?email=${values.email}`)
-      })
-    } catch(error) {
+        router.push("/auth/login/verify" + `?email=${values.email}`);
+      });
+    } catch (error) {
       console.log("error", error);
       toast.error("Something went wrong");
     }
